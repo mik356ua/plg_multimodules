@@ -1,7 +1,7 @@
 plg_multimodules
 ================
 
-MultiModules System Plugin for Joomla!1.5
+MultiModules System Plugin for Joomla!1.5. Adds Multicategories support to your modules
 
 ### Dependencies
 
