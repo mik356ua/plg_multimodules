@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE install PUBLIC "-//Joomla! 1.5//DTD plugin 1.0//EN" "http://dev.joomla.org/xml/1.5/plugin-install.dtd">
+<install version="1.5" type="plugin" group="system" method="upgrade">
+    <name>System - MultiModules</name>
+    <creationDate>August 2012</creationDate>
+    <author>Mike Milkman</author>
+    <authorEmail>admin@milkdev.com</authorEmail>
+    <authorUrl>http://milkdev.com</authorUrl>
+    <copyright>Copyright (c) Mike Milkman, 2010-2012. All rights reserved</copyright>
+    <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+    <version>0.0.1</version>
+    <description>MultiModules System Plugin for Joomla!1.5</description>
+
+    <files>
+        <filename plugin="multimodules">multimodules.php</filename>
+    </files>
+
+    <params>
+    </params>
+
+</install>
