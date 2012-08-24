@@ -11,7 +11,6 @@ defined('_JEXEC') or die('Restricted access');
 
 // Importing Joomla! Plugin library file
 jimport('joomla.plugin.plugin');
-jimport('joomla.user.helper');
 
 /**
  * MultiModules System Plugin
@@ -45,46 +44,32 @@ class plgSystemMultiModules extends JPlugin
 
     /**
      * @access  public
+     * @param array $modules
      * @return  void
      */
-    function onAfterInitialise()
+    function onPrepareModuleList(&$modules)
     {
         // Checking if it's front-end
         $app = &JFactory::getApplication();
         if ($app->isAdmin()) return;
-    }
 
-    /**
-     * @access  public
-     * @return  void
-     */
-    function onAfterRoute()
-    {
-        // Checking if it's front-end
-        $app = &JFactory::getApplication();
-        if ($app->isAdmin()) return;
-    }
+        foreach ($modules as &$module) {
 
-    /**
-     * @access  public
-     * @return  void
-     */
-    function onAfterDispatch()
-    {
-        // Checking if it's front-end
-        $app = &JFactory::getApplication();
-        if ($app->isAdmin()) return;
-    }
+            $params = new JParameter($module->params);
 
-    /**
-     * @access  public
-     * @return  void
-     */
-    function onAfterRender()
-    {
-        // Checking if it's front-end
-        $app = &JFactory::getApplication();
-        if ($app->isAdmin()) return;
-    }
+            if ($multicategories = (array)$params->get('multicategories', array())) {
+                // Check for option
+                if ($this->conditions['option'] != 'com_multicategories')
+                    $module->published = 0;
 
+                // Check for view
+                if (!$params->get('multicategories_articles') && $this->conditions['view'] == 'article')
+                    $module->published = 0;
+
+                // Check for id
+                if (!in_array($this->conditions['id'], $multicategories))
+                    $module->published = 0;
+            }
+        }
+    }
 }
