@@ -30,16 +30,6 @@ class plgSystemMultiModules extends JPlugin
     public function __construct(&$subject, $params)
     {
         parent::__construct($subject, $params);
-
-        $option = JRequest::getCmd('option');
-        $view = JRequest::getCmd('view');
-        $id = JRequest::getCmd($view == 'category' ? 'id' : 'catid');
-
-        $this->conditions = array(
-            'option' => $option,
-            'view' => $view,
-            'id' => $id,
-        );
     }
 
     /**
@@ -47,29 +37,52 @@ class plgSystemMultiModules extends JPlugin
      * @param array $modules
      * @return  void
      */
-    function onPrepareModuleList(&$modules)
+    public function onPrepareModuleList(&$modules)
     {
-        // Checking if it's front-end
+        // Check if it's front-end
         $app = &JFactory::getApplication();
         if ($app->isAdmin()) return;
 
+        // Check for conditions
+        if (!$this->conditions) $this->setConditions();
+
+        // Process modules
         foreach ($modules as &$module) {
 
             $params = new JParameter($module->params);
 
             if ($multicategories = (array)$params->get('multicategories', array())) {
                 // Check for option
-                if ($this->conditions['option'] != 'com_multicategories')
+                if ($this->conditions['option'] != 'com_multicategories') {
                     $module->published = 0;
+                    return;
+                }
 
                 // Check for view
-                if (!$params->get('multicategories_articles') && $this->conditions['view'] == 'article')
+                if (!$params->get('multicategories_articles') && $this->conditions['view'] == 'article') {
                     $module->published = 0;
+                    return;
+                }
 
                 // Check for id
-                if (!in_array($this->conditions['id'], $multicategories))
+                if (!in_array($this->conditions['id'], $multicategories)) {
                     $module->published = 0;
+                    return;
+                }
             }
         }
+    }
+
+    private function setConditions()
+    {
+        $option = JRequest::getCmd('option');
+        $view = JRequest::getCmd('view');
+        $id = JRequest::getInt($view == 'category' ? 'id' : 'catid');
+
+        $this->conditions = array(
+            'option' => $option,
+            'view' => $view,
+            'id' => $id,
+        );
     }
 }
